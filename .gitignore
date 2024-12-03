@@ -41,3 +41,6 @@ terraform.rc
 # End of https://www.toptal.com/developers/gitignore/api/terraform
 node_modules
 .env
+.terraform.lock.hcl
+docker-install.sh
+backend.tf
