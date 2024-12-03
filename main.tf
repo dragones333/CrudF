@@ -37,29 +37,29 @@ resource "digitalocean_droplet" "orlando_server_droplet" {
       "mkdir -p /volumes/nginx/certs",
       "mkdir -p /volumes/nginx/vhostd",
       "touch /projects/.env",
-      "echo \"MONGO_DB=${var.MONGO_DB}\" >> /projects/.env",  # Cambiar MYSQL_DB por MONGO_DB
-      "echo \"MONGO_USER=${var.MONGO_USER}\" >> /projects/.env",  # Cambiar MYSQL_USER por MONGO_USER
-      "echo \"MONGO_HOST=${var.MONGO_HOST}\" >> /projects/.env",  # Cambiar MYSQL_HOST por MONGO_HOST
-      "echo \"MONGO_PASSWORD=${var.MONGO_PASSWORD}\" >> /projects/.env",  # Cambiar MYSQL_PASSWORD por MONGO_PASSWORD
+      "echo \"MONGO_DB=${var.MONGO_DB}\" >> /projects/.env", 
+      "echo \"MONGO_USER=${var.MONGO_USER}\" >> /projects/.env", 
+      "echo \"MONGO_HOST=${var.MONGO_HOST}\" >> /projects/.env",  
+      "echo \"MONGO_PASSWORD=${var.MONGO_PASSWORD}\" >> /projects/.env",  
       "echo \"DOMAIN=${var.DOMAIN}\" >> /projects/.env",
       "echo \"USER_EMAIL=${var.USER_EMAIL}\" >> /projects/.env"
     ]
     connection {
       type        = "ssh"
       user        = "root"
-      private_key = file("./keys/orlando_server")  # Ruta a tu clave privada
+      private_key = file("./keys/orlando_server") 
       host        = self.ipv4_address
     }
   }
 
   provisioner "file" {
-    source      = "./containers/docker-compose.yml"  # Archivo docker-compose a copiar
+    source      = "./containers/docker-compose.yml"  
     destination = "/projects/docker-compose.yml"
 
     connection {
       type        = "ssh"
       user        = "root"
-      private_key = file("./keys/orlando_server")  # Ruta a tu clave privada
+      private_key = file("./keys/orlando_server") 
       host        = self.ipv4_address
     }
   }
