@@ -12,6 +12,9 @@ variable "MONGO_DB" {
   type = string
 }
 
+variable "MONGO_URI" {
+  type = string
+}
 variable "USER_EMAIL" {
   type = string
 }
