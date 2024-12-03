@@ -3,11 +3,11 @@ version: '3.8'
 services:
   reverse-proxy:
     image: nginxproxy/nginx-proxy:alpine
-    container_name: 'Reverse-proxy'
+    container_name: 'contefin' 
     restart: always
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     environment:
       - VIRTUAL_HOST=${DOMAIN}
     volumes:
@@ -18,53 +18,23 @@ services:
 
   lets-encrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: 'Lets-Encrypt'
+    container_name: 'contenima' 
     restart: always
     environment:
-      - NGINX_PROXY_CONTAINER=Reverse-proxy
+      - NGINX_PROXY_CONTAINER=contefin
     volumes:
       - /volumes/nginx/certs:/etc/nginx/certs
       - /volumes/nginx/vhostd:/etc/nginx/vhost.d
       - /volumes/nginx/html:/usr/share/nginx/html:rw
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
-  db:
-    image: mysql:latest
-    container_name: mysql_container
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DB}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    volumes:
-      - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${MYSQL_PASSWORD} || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ApiFinal
-    expose:
-      - "3000"
+    container_name: '2919d9835b0f' 
+    ports:
+      - "3000:3000" 
     environment:
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DB: ${MYSQL_DB}
-      MYSQL_HOST: db
-      MYSQL_PORT: 3306
-      VIRTUAL_HOST: ${DOMAIN}
-      LETSENCRYPT_HOST: ${DOMAIN}
-      LETSENCRYPT_EMAIL: ${USER_EMAIL}
-    depends_on:
-      db:
-        condition: service_healthy
+      DB_URI: ${DB_URI}         
 
-volumes:
-  db_data:
