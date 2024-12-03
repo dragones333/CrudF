@@ -1,11 +1,24 @@
+name: Terraform CI/CD
+
+on:
+  push:
+    branches:
+      - master
+
 env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  TF_VAR_DO_Token: ${{ secrets.DO_Token }}
+  TF_VAR_MONGO_URI: ${{ secrets.MONGO_URI }} 
+  TF_VAR_DOMAIN: ${{ secrets.DOMAIN }}
+  TF_VAR_USER_EMAIL: ${{ secrets.USER_EMAIL }}
   TF_VAR_SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
   TF_VAR_SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
 
 jobs:
   terraform-apply:
     runs-on: ubuntu-latest
-    steps:
+    steps: 
       - name: Clone repository
         uses: actions/checkout@v4
 
@@ -17,7 +30,7 @@ jobs:
 
       - name: Create SSH keys from secrets
         run: |
-          mkdir keys
+          mkdir -p keys
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ./keys/orlando_server
           echo "${{ secrets.SSH_PUBLIC_KEY }}" > ./keys/orlando_server.pub
           chmod 600 ./keys/orlando_server
@@ -27,10 +40,10 @@ jobs:
         run: terraform init
 
       - name: Terraform format
-        run: terraform fmt
+        run: terraform fmt 
 
       - name: Terraform validate
-        run: terraform validate
+        run: terraform validate 
 
       - name: Terraform plan
         run: terraform plan
